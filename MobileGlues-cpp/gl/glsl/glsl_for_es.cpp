@@ -235,16 +235,13 @@ std::string process_uniform_declarations(const std::string& glslCode) {
             const size_t decl_start = scan_pos;
             scan_pos += 7; // Skip "uniform"
 
-            // 解析精度限定符和类型
             std::string precision, type;
             bool found_precision = false;
 
-            // 第一轮解析：类型前的精度限定符
             while (scan_pos < length) {
                 while (scan_pos < length && std::isspace(glslCode[scan_pos]))
                     ++scan_pos;
 
-                // 检查精度限定符
                 for (const auto& kw : precision_kws) {
                     if (glslCode.compare(scan_pos, kw.length(), kw) == 0) {
                         precision = " " + kw;
@@ -255,7 +252,6 @@ std::string process_uniform_declarations(const std::string& glslCode) {
                 }
                 if (found_precision) break;
 
-                // 开始提取类型
                 const size_t type_start = scan_pos;
                 while (scan_pos < length && (std::isalnum(glslCode[scan_pos]) || glslCode[scan_pos] == '_')) {
                     ++scan_pos;
@@ -264,7 +260,6 @@ std::string process_uniform_declarations(const std::string& glslCode) {
                 break;
             }
 
-            // 第二轮解析：类型后的精度限定符
             while (scan_pos < length) {
                 while (scan_pos < length && std::isspace(glslCode[scan_pos]))
                     ++scan_pos;
@@ -281,7 +276,6 @@ std::string process_uniform_declarations(const std::string& glslCode) {
                 if (!found) break;
             }
 
-            // 确保类型被正确提取
             if (type.empty()) {
                 const size_t type_start = scan_pos;
                 while (scan_pos < length && (std::isalnum(glslCode[scan_pos]) || glslCode[scan_pos] == '_')) {
@@ -290,7 +284,6 @@ std::string process_uniform_declarations(const std::string& glslCode) {
                 type = glslCode.substr(type_start, scan_pos - type_start);
             }
 
-            // 提取变量名
             while (scan_pos < length && std::isspace(glslCode[scan_pos]))
                 ++scan_pos;
             const size_t name_start = scan_pos;
@@ -299,14 +292,11 @@ std::string process_uniform_declarations(const std::string& glslCode) {
             }
             const std::string name = glslCode.substr(name_start, scan_pos - name_start);
 
-            // 定位声明结束
             size_t decl_end = glslCode.find(';', scan_pos);
             if (decl_end == std::string::npos)
                 decl_end = length;
             else
                 ++decl_end;
-
-            // 处理初始化值
             const bool has_initializer = (glslCode.find('=', scan_pos) < decl_end);
             if (has_initializer) {
                 result.append("uniform").append(precision).append(" ").append(type).append(" ").append(name).append(
@@ -831,7 +821,6 @@ std::string spirv_to_essl(std::vector<unsigned int> spirv, uint essl_version, in
     spvc_compiler compiler_glsl = nullptr;
     spvc_compiler_options options = nullptr;
     spvc_resources resources = nullptr;
-    const spvc_reflected_resource* list = nullptr;
     const char* result = nullptr;
     size_t count;
 
@@ -843,7 +832,6 @@ std::string spirv_to_essl(std::vector<unsigned int> spirv, uint essl_version, in
     spvc_context_parse_spirv(context, p_spirv, word_count, &ir);
     spvc_context_create_compiler(context, SPVC_BACKEND_GLSL, ir, SPVC_CAPTURE_MODE_TAKE_OWNERSHIP, &compiler_glsl);
     spvc_compiler_create_shader_resources(compiler_glsl, &resources);
-    spvc_resources_get_resource_list_for_type(resources, SPVC_RESOURCE_TYPE_UNIFORM_BUFFER, &list, &count);
     spvc_compiler_create_compiler_options(compiler_glsl, &options);
     spvc_compiler_options_set_uint(options, SPVC_COMPILER_OPTION_GLSL_VERSION,
                                    essl_version >= 300 ? essl_version : 300);
