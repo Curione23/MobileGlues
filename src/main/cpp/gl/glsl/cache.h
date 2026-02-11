@@ -1,6 +1,9 @@
-//
-// Created by BZLZHH on 2025/2/12.
-//
+// MobileGlues - gl/glsl/cache.h
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #ifndef MOBILEGLUES_PLUGIN_CACHE_H
 #define MOBILEGLUES_PLUGIN_CACHE_H
@@ -23,6 +26,7 @@ public:
     void save();
 
     static Cache& get_instance();
+
 private:
     struct CacheEntry {
         std::array<uint8_t, 32> sha256;
@@ -43,5 +47,4 @@ private:
     void maintainCacheSize();
 };
 
-
-#endif 
+#endif

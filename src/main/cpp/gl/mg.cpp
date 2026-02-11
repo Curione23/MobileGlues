@@ -1,6 +1,9 @@
-//
-// Created by BZLZHH on 2025/1/27.
-//
+// MobileGlues - gl/mg.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #include <unistd.h>
 #include "mg.h"
@@ -43,7 +46,7 @@ void write_log(const char* format, ...) {
     fsync(fd);
 #endif
     // Todo: close file
-    //fclose(file);
+    // fclose(file);
 #endif
 }
 
@@ -71,28 +74,28 @@ void clear_log() {
 #endif
 }
 
-GLenum pname_convert(GLenum pname){
+GLenum pname_convert(GLenum pname) {
     switch (pname) {
-        // TODO: Realize GL_TEXTURE_LOD_BIAS for other devices.
-        case GL_TEXTURE_LOD_BIAS:
-            return GL_TEXTURE_LOD_BIAS_QCOM;
+    // TODO: Realize GL_TEXTURE_LOD_BIAS for other devices.
+    case GL_TEXTURE_LOD_BIAS:
+        return GL_TEXTURE_LOD_BIAS_QCOM;
     }
     return pname;
 }
 
 GLenum map_tex_target(GLenum target) {
     switch (target) {
-        case GL_TEXTURE_1D:
-        case GL_TEXTURE_3D:
-        case GL_TEXTURE_RECTANGLE_ARB:
-            return GL_TEXTURE_2D;
-            
-        case GL_PROXY_TEXTURE_1D:
-        case GL_PROXY_TEXTURE_3D:
-        case GL_PROXY_TEXTURE_RECTANGLE_ARB:
-            return GL_PROXY_TEXTURE_2D;
-            
-        default:
-            return target;
+    case GL_TEXTURE_1D:
+    case GL_TEXTURE_3D:
+    case GL_TEXTURE_RECTANGLE_ARB:
+        return GL_TEXTURE_2D;
+
+    case GL_PROXY_TEXTURE_1D:
+    case GL_PROXY_TEXTURE_3D:
+    case GL_PROXY_TEXTURE_RECTANGLE_ARB:
+        return GL_PROXY_TEXTURE_2D;
+
+    default:
+        return target;
     }
 }

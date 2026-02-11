@@ -1,4 +1,10 @@
-﻿//
+// MobileGlues - gl/gl.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
+﻿ //
 // Created by Swung0x48 on 2024/10/8.
 //
 
@@ -13,7 +19,7 @@
 
 #define DEBUG 0
 
-static GLclampd currentDepthValue;
+    static GLclampd currentDepthValue;
 
 extern GLuint current_draw_fbo;
 extern std::vector<framebuffer_t> framebuffers;
@@ -29,11 +35,7 @@ static GLuint g_depthClearProgram = 0;
 static GLuint g_depthClearVAO = 0;
 static GLuint g_depthClearVBO = 0;
 
-static const GLfloat kFullScreenTri[3][2] = {
-    { -1.0f, -1.0f },
-    {  3.0f, -1.0f },
-    { -1.0f,  3.0f }
-};
+static const GLfloat kFullScreenTri[3][2] = {{-1.0f, -1.0f}, {3.0f, -1.0f}, {-1.0f, 3.0f}};
 
 static const char* kDepthClearVS = R"glsl(
     #version 300 es
@@ -61,7 +63,7 @@ void InitDepthClearCoreProfile() {
         GLES.glShaderSource(s, 1, &src, nullptr);
         GLES.glCompileShader(s);
         return s;
-        };
+    };
     GLuint vs = compile(GL_VERTEX_SHADER, kDepthClearVS);
     GLuint fs = compile(GL_FRAGMENT_SHADER, kDepthClearFS);
 
@@ -99,7 +101,7 @@ void DrawDepthClearTri() {
     GLES.glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     GLES.glDepthMask(GL_TRUE);
     GLES.glDepthFunc(GL_ALWAYS);
-    
+
     GLES.glUseProgram(g_depthClearProgram);
     GLES.glBindVertexArray(g_depthClearVAO);
     GLES.glDrawArrays(GL_TRIANGLES, 0, 3);
@@ -119,14 +121,12 @@ void glClear(GLbitfield mask) {
 
     CHECK_GL_ERROR_NO_INIT
 
-    if (global_settings.angle == AngleMode::Enabled &&
-        mask == GL_DEPTH_BUFFER_BIT && 
-        fabs(currentDepthValue - 1.0f) <= 0.001f
-        && framebuffers[current_draw_fbo].color_attachments_all_none
-        ) {
+    if (global_settings.angle == AngleMode::Enabled && mask == GL_DEPTH_BUFFER_BIT &&
+        fabs(currentDepthValue - 1.0f) <= 0.001f && framebuffers[current_draw_fbo].color_attachments_all_none) {
         LOG_D("doing depth workaround")
         if (global_settings.angle_depth_clear_fix_mode == AngleDepthClearFixMode::Mode1)
-            // Workaround for ANGLE depth-clear bug: if depth≈1.0, draw a fullscreen triangle at z=1.0 to force actual depth buffer write.
+            // Workaround for ANGLE depth-clear bug: if depth≈1.0, draw a fullscreen triangle at z=1.0 to force actual
+            // depth buffer write.
             DrawDepthClearTri();
         else if (global_settings.angle_depth_clear_fix_mode == AngleDepthClearFixMode::Mode2) {
             // Or just explicitly clear depth buffer and see what's happened

@@ -1,6 +1,9 @@
-//
-// Created by hanji on 2025/2/9.
-//
+// MobileGlues - config/gpu_utils.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #include "gpu_utils.h"
 #include "../gles/loader.h"
@@ -12,29 +15,19 @@
 #include <cstring>
 #include <optional>
 typedef const char* cstr;
-static const cstr gles3_lib[] = {
-    "libGLESv3_CM",
-    "libGLESv3",
-    nullptr
-};
-static const cstr egl_libs[] = {
-    "libEGL",
-    nullptr
-};
-static const cstr vk_lib[] = {
-    "libvulkan",
-    nullptr
-};
+static const cstr gles3_lib[] = {"libGLESv3_CM", "libGLESv3", nullptr};
+static const cstr egl_libs[] = {"libEGL", nullptr};
+static const cstr vk_lib[] = {"libvulkan", nullptr};
 
 namespace egl_func {
-    PFNEGLGETDISPLAYPROC        eglGetDisplay = nullptr;
-    PFNEGLINITIALIZEPROC        eglInitialize = nullptr;
-    PFNEGLCHOOSECONFIGPROC      eglChooseConfig = nullptr;
-    PFNEGLCREATECONTEXTPROC     eglCreateContext = nullptr;
-    PFNEGLMAKECURRENTPROC       eglMakeCurrent = nullptr;
-    PFNEGLDESTROYCONTEXTPROC    eglDestroyContext = nullptr;
-    PFNEGLTERMINATEPROC         eglTerminate = nullptr;
-}
+    PFNEGLGETDISPLAYPROC eglGetDisplay = nullptr;
+    PFNEGLINITIALIZEPROC eglInitialize = nullptr;
+    PFNEGLCHOOSECONFIGPROC eglChooseConfig = nullptr;
+    PFNEGLCREATECONTEXTPROC eglCreateContext = nullptr;
+    PFNEGLMAKECURRENTPROC eglMakeCurrent = nullptr;
+    PFNEGLDESTROYCONTEXTPROC eglDestroyContext = nullptr;
+    PFNEGLTERMINATEPROC eglTerminate = nullptr;
+} // namespace egl_func
 
 template <typename T>
 static void* open_lib(const T names[], const char* override) {
@@ -62,8 +55,8 @@ static bool loadEGLFunctions(void* lib) {
     egl_func::eglTerminate = (PFNEGLTERMINATEPROC)dlsym(lib, "eglTerminate");
 
     return egl_func::eglGetDisplay && egl_func::eglInitialize && egl_func::eglChooseConfig &&
-        egl_func::eglCreateContext && egl_func::eglMakeCurrent &&
-        egl_func::eglDestroyContext && egl_func::eglTerminate;
+           egl_func::eglCreateContext && egl_func::eglMakeCurrent && egl_func::eglDestroyContext &&
+           egl_func::eglTerminate;
 }
 
 std::string getGPUInfo() {
@@ -85,16 +78,21 @@ std::string getGPUInfo() {
         return std::string();
     }
 
-    const EGLint attribs[] = {
-        EGL_BLUE_SIZE,   8,
-        EGL_GREEN_SIZE,  8,
-        EGL_RED_SIZE,    8,
-        EGL_ALPHA_SIZE,  8,
-        EGL_DEPTH_SIZE, 24,
-        EGL_SURFACE_TYPE, EGL_PBUFFER_BIT,
-        EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
-        EGL_NONE
-    };
+    const EGLint attribs[] = {EGL_BLUE_SIZE,
+                              8,
+                              EGL_GREEN_SIZE,
+                              8,
+                              EGL_RED_SIZE,
+                              8,
+                              EGL_ALPHA_SIZE,
+                              8,
+                              EGL_DEPTH_SIZE,
+                              24,
+                              EGL_SURFACE_TYPE,
+                              EGL_PBUFFER_BIT,
+                              EGL_RENDERABLE_TYPE,
+                              EGL_OPENGL_ES2_BIT,
+                              EGL_NONE};
     EGLint numConfigs = 0;
     if (egl_func::eglChooseConfig(display, attribs, nullptr, 0, &numConfigs) != EGL_TRUE || numConfigs == 0) {
         egl_func::eglTerminate(display);
@@ -104,7 +102,7 @@ std::string getGPUInfo() {
     EGLConfig config;
     egl_func::eglChooseConfig(display, attribs, &config, 1, &numConfigs);
 
-    const EGLint ctxAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE };
+    const EGLint ctxAttribs[] = {EGL_CONTEXT_CLIENT_VERSION, 3, EGL_NONE};
     EGLContext ctx = egl_func::eglCreateContext(display, config, EGL_NO_CONTEXT, ctxAttribs);
     if (ctx == EGL_NO_CONTEXT) {
         egl_func::eglTerminate(display);
@@ -122,7 +120,7 @@ std::string getGPUInfo() {
     void* glesLib = open_lib(gles3_lib, nullptr);
     std::string renderer;
     if (glesLib) {
-        auto glGetString = (const GLubyte * (*)(GLenum))dlsym(glesLib, "glGetString");
+        auto glGetString = (const GLubyte* (*)(GLenum))dlsym(glesLib, "glGetString");
         if (glGetString) {
             renderer = reinterpret_cast<const char*>(glGetString(GL_RENDERER));
         }
@@ -138,23 +136,20 @@ std::string getGPUInfo() {
 }
 
 int isAdreno(const char* gpu) {
-//    const char* gpu = getGPUInfo();
-    if (!gpu)
-        return 0;
+    //    const char* gpu = getGPUInfo();
+    if (!gpu) return 0;
     return strstr(gpu, "Adreno") != nullptr;
 }
 
 int isAdreno740(const char* gpu) {
     //    const char* gpu = getGPUInfo();
-    if (!gpu)
-        return 0;
+    if (!gpu) return 0;
     return isAdreno(gpu) && (strstr(gpu, "740") != nullptr);
 }
 
 int isAdreno730(const char* gpu) {
     //    const char* gpu = getGPUInfo();
-    if (!gpu)
-        return 0;
+    if (!gpu) return 0;
     return isAdreno(gpu) && (strstr(gpu, "730") != nullptr);
 }
 
@@ -163,22 +158,19 @@ bool checkIfANGLESupported(const char* gpu) {
 }
 
 int isAdreno830(const char* gpu) {
-//    const char* gpu = getGPUInfo();
-    if (!gpu)
-        return 0;
+    //    const char* gpu = getGPUInfo();
+    if (!gpu) return 0;
     return isAdreno(gpu) && (strstr(gpu, "830") != nullptr);
 }
 
 static std::optional<int> hasVk12;
 int hasVulkan12() {
-    if (hasVk12.has_value())
-        return hasVk12.value();
+    if (hasVk12.has_value()) return hasVk12.value();
     void* vulkan_lib = open_lib(vk_lib, nullptr);
-    if (!vulkan_lib)
-        return 0;
+    if (!vulkan_lib) return 0;
 
 #ifndef __APPLE__
-    
+
     typedef VkResult (*PFN_vkEnumerateInstanceExtensionProperties)(const char*, uint32_t*, VkExtensionProperties*);
     typedef VkResult (*PFN_vkCreateInstance)(const VkInstanceCreateInfo*, const VkAllocationCallbacks*, VkInstance*);
     typedef void (*PFN_vkDestroyInstance)(VkInstance, const VkAllocationCallbacks*);
@@ -186,18 +178,15 @@ int hasVulkan12() {
     typedef void (*PFN_vkGetPhysicalDeviceProperties)(VkPhysicalDevice, VkPhysicalDeviceProperties*);
 
     auto vkEnumerateInstanceExtensionProperties =
-            (PFN_vkEnumerateInstanceExtensionProperties)dlsym(vulkan_lib, "vkEnumerateInstanceExtensionProperties");
-    auto vkCreateInstance =
-            (PFN_vkCreateInstance)dlsym(vulkan_lib, "vkCreateInstance");
-    auto vkDestroyInstance =
-            (PFN_vkDestroyInstance)dlsym(vulkan_lib, "vkDestroyInstance");
-    auto vkEnumeratePhysicalDevices =
-            (PFN_vkEnumeratePhysicalDevices)dlsym(vulkan_lib, "vkEnumeratePhysicalDevices");
+        (PFN_vkEnumerateInstanceExtensionProperties)dlsym(vulkan_lib, "vkEnumerateInstanceExtensionProperties");
+    auto vkCreateInstance = (PFN_vkCreateInstance)dlsym(vulkan_lib, "vkCreateInstance");
+    auto vkDestroyInstance = (PFN_vkDestroyInstance)dlsym(vulkan_lib, "vkDestroyInstance");
+    auto vkEnumeratePhysicalDevices = (PFN_vkEnumeratePhysicalDevices)dlsym(vulkan_lib, "vkEnumeratePhysicalDevices");
     auto vkGetPhysicalDeviceProperties =
-            (PFN_vkGetPhysicalDeviceProperties)dlsym(vulkan_lib, "vkGetPhysicalDeviceProperties");
+        (PFN_vkGetPhysicalDeviceProperties)dlsym(vulkan_lib, "vkGetPhysicalDeviceProperties");
 
-    if (!vkEnumerateInstanceExtensionProperties || !vkCreateInstance ||
-        !vkDestroyInstance || !vkEnumeratePhysicalDevices || !vkGetPhysicalDeviceProperties) {
+    if (!vkEnumerateInstanceExtensionProperties || !vkCreateInstance || !vkDestroyInstance ||
+        !vkEnumeratePhysicalDevices || !vkGetPhysicalDeviceProperties) {
         dlclose(vulkan_lib);
         return 0;
     }
@@ -265,6 +254,6 @@ int hasVulkan12() {
     dlclose(vulkan_lib);
     hasVk12 = false;
     return 0;
-    
+
 #endif
 }

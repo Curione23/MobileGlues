@@ -1,6 +1,9 @@
-//
-// Created by hanji on 2025/2/6.
-//
+// MobileGlues - gl/framebuffer.h
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #ifndef MOBILEGLUES_FRAMEBUFFER_H
 #define MOBILEGLUES_FRAMEBUFFER_H
@@ -22,18 +25,20 @@ struct framebuffer_t {
 };
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
-GLint getMaxDrawBuffers();
+    GLint getMaxDrawBuffers();
 
-GLAPI GLAPIENTRY void glBindFramebuffer(GLenum target, GLuint framebuffer);
-GLAPI GLAPIENTRY void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
-GLAPI GLAPIENTRY void glFramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
-GLAPI GLAPIENTRY void glDrawBuffer(GLenum buf);
-GLAPI GLAPIENTRY void glDrawBuffers(GLsizei n, const GLenum *bufs);
-GLAPI GLAPIENTRY void glReadBuffer(GLenum src);
-GLAPI GLAPIENTRY GLenum glCheckFramebufferStatus(GLenum target);
+    GLAPI GLAPIENTRY void glBindFramebuffer(GLenum target, GLuint framebuffer);
+    GLAPI GLAPIENTRY void glFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture,
+                                                 GLint level);
+    GLAPI GLAPIENTRY void glFramebufferTexture(GLenum target, GLenum attachment, GLuint texture, GLint level);
+    GLAPI GLAPIENTRY void glDrawBuffer(GLenum buf);
+    GLAPI GLAPIENTRY void glDrawBuffers(GLsizei n, const GLenum* bufs);
+    GLAPI GLAPIENTRY void glReadBuffer(GLenum src);
+    GLAPI GLAPIENTRY GLenum glCheckFramebufferStatus(GLenum target);
 
 #ifdef __cplusplus
 }
@@ -41,4 +46,4 @@ GLAPI GLAPIENTRY GLenum glCheckFramebufferStatus(GLenum target);
 
 void InitFramebufferMap(size_t expectedSize);
 
-#endif //MOBILEGLUES_FRAMEBUFFER_H
+#endif // MOBILEGLUES_FRAMEBUFFER_H

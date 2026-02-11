@@ -1,6 +1,9 @@
-//
-// Created by BZLZHH on 2025/1/28.
-//
+// MobileGlues - gl/buffer.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #include "buffer.h"
 #include "ankerl/unordered_dense.h"
@@ -766,8 +769,8 @@ GLboolean glUnmapBuffer(GLenum target) {
 void glBufferStorage(GLenum target, GLsizeiptr size, const void* data, GLbitfield flags) {
     LOG()
     if (GLES.glBufferStorageEXT) {
-        if (global_settings.buffer_coherent_as_flush && ((flags & GL_MAP_PERSISTENT_BIT) != 0 ||
-            (flags & GL_DYNAMIC_STORAGE_BIT) != 0))
+        if (global_settings.buffer_coherent_as_flush &&
+            ((flags & GL_MAP_PERSISTENT_BIT) != 0 || (flags & GL_DYNAMIC_STORAGE_BIT) != 0))
             flags |= (GL_MAP_WRITE_BIT | GL_MAP_COHERENT_BIT | GL_MAP_PERSISTENT_BIT);
         GLES.glBufferStorageEXT(target, size, data, flags);
     }

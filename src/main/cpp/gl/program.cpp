@@ -1,6 +1,9 @@
-//
-// Created by hanji on 2025/2/3.
-//
+// MobileGlues - gl/program.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #include <regex.h>
 #include "GL/glext.h"
@@ -115,7 +118,6 @@ void GenerateDefaultFSSource() {
     }
 }
 
-
 static UnorderedMap<unsigned, GLuint> DefaultFSMap; // essl version <-> shader id
 void glLinkProgram(GLuint program) {
     LOG()
@@ -143,7 +145,7 @@ void glLinkProgram(GLuint program) {
     // Generate defaut fragment shader if needed
     if (program_map_should_generate_fs[program] == ShouldGenerateFSState::Maybe) {
         GenerateDefaultFSSource();
-        GLuint &default_fs = DefaultFSMap[CurrentDefaultFSSourceVersion];
+        GLuint& default_fs = DefaultFSMap[CurrentDefaultFSSourceVersion];
         if (!default_fs) {
             default_fs = GLES.glCreateShader(GL_FRAGMENT_SHADER);
             const char* src = DefaultFSSource.c_str();

@@ -1,6 +1,9 @@
-//
-// Created by Swung 0x48 on 2024/10/7.
-//
+// MobileGlues - main.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #include "config/settings.h"
 #include "egl/egl.h"
@@ -20,11 +23,10 @@
 #ifndef __APPLE__
 __attribute__((used))
 #endif
-const char *license = "GNU LGPL-2.1 License";
+const char* license = "GNU LGPL-2.1 License";
 
 void init_config() {
-    if (check_path())
-        config_refresh();
+    if (check_path()) config_refresh();
 }
 
 void show_license() {

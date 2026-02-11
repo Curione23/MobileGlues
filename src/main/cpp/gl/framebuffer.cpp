@@ -1,6 +1,9 @@
-//
-// Created by hanji on 2025/2/6.
-//
+// MobileGlues - gl/framebuffer.cpp
+// Copyright (c) 2025-2026 MobileGL-Dev
+// Licensed under the GNU Lesser General Public License v2.1:
+//   https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt
+// SPDX-License-Identifier: LGPL-2.1-only
+// End of Source File Header
 
 #include "framebuffer.h"
 #include "log.h"
@@ -89,8 +92,8 @@ void glDrawBuffer(GLenum buffer) {
     LOG()
     LOG_D("glDrawBuffer %d", buffer)
 
-//    GLint currentFBO;
-//    GLES.glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
+    //    GLint currentFBO;
+    //    GLES.glGetIntegerv(GL_FRAMEBUFFER_BINDING, &currentFBO);
     if (current_draw_fbo == 0) {
         GLenum buffers[] = {buffer};
         glDrawBuffers(1, buffers);
@@ -146,8 +149,8 @@ void glDrawBuffers(GLsizei n, const GLenum* bufs) {
             new_bufs[i] = physical_attachment;
             int index = logical_attachment - GL_COLOR_ATTACHMENT0;
             attachment_t& attach = fbo.color_attachments[index];
-            GLES.glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, physical_attachment,
-                                   attach.textarget, attach.texture, attach.level);
+            GLES.glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, physical_attachment, attach.textarget, attach.texture,
+                                        attach.level);
         } else {
             new_bufs[i] = bufs[i];
         }
@@ -155,13 +158,12 @@ void glDrawBuffers(GLsizei n, const GLenum* bufs) {
     GLES.glDrawBuffers(n, new_bufs.data());
 }
 void glReadBuffer(GLenum src) {
-    if (current_read_fbo != 0 && src >= GL_COLOR_ATTACHMENT0 &&
-        src < GL_COLOR_ATTACHMENT0 + MAX_COLOR_ATTACHMENTS) {
+    if (current_read_fbo != 0 && src >= GL_COLOR_ATTACHMENT0 && src < GL_COLOR_ATTACHMENT0 + MAX_COLOR_ATTACHMENTS) {
         framebuffer_t& fbo = framebuffers[current_read_fbo];
         int index = src - GL_COLOR_ATTACHMENT0;
         attachment_t& attach = fbo.color_attachments[index];
-        GLES.glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
-                               attach.textarget, attach.texture, attach.level);
+        GLES.glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, attach.textarget, attach.texture,
+                                    attach.level);
         GLES.glReadBuffer(GL_COLOR_ATTACHMENT0);
     } else {
         GLES.glReadBuffer(src);
