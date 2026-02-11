@@ -17,7 +17,6 @@ void init_settings() {
 #if defined(__APPLE__)
     global_settings.angle = AngleMode::Disabled;
     global_settings.ignore_error = IgnoreErrorLevel::Partial;
-    global_settings.ext_gl43 = false;
     global_settings.ext_compute_shader = false;
     global_settings.max_glsl_cache_size = 30 * 1024 * 1024;
     global_settings.multidraw_mode = multidraw_mode_t::DrawElements;
@@ -41,7 +40,6 @@ void init_settings() {
         success ? static_cast<AngleConfig>(config_get_int("enableANGLE")) : AngleConfig::DisableIfPossible;
     NoErrorConfig noErrorConfig =
         success ? static_cast<NoErrorConfig>(config_get_int("enableNoError")) : NoErrorConfig::Auto;
-    bool enableExtGL43 = success ? (config_get_int("enableExtGL43") > 0) : false;
     bool enableExtComputeShader = success ? (config_get_int("enableExtComputeShader") > 0) : false;
     bool enableExtTimerQuery = success ? (config_get_int("enableExtTimerQuery") > 0) : false;
     bool enableExtDirectStateAccess = success ? (config_get_int("enableExtDirectStateAccess") > 0) : false;
@@ -108,7 +106,6 @@ void init_settings() {
         LOG_V("Unsupported launcher detected, force using default config.")
         angleConfig = AngleConfig::DisableIfPossible;
         noErrorConfig = NoErrorConfig::Auto;
-        enableExtGL43 = false;
         enableExtComputeShader = false;
         enableExtTimerQuery = true;
         enableExtDirectStateAccess = true;
@@ -188,7 +185,6 @@ void init_settings() {
         break;
     }
 
-    global_settings.ext_gl43 = enableExtGL43;
     global_settings.ext_compute_shader = enableExtComputeShader;
     global_settings.ext_timer_query = enableExtTimerQuery;
     global_settings.ext_direct_state_access = enableExtDirectStateAccess;
@@ -204,7 +200,6 @@ void init_settings() {
     LOG_V("[MobileGlues] Setting: ignoreError                 = %i", static_cast<int>(global_settings.ignore_error))
     LOG_V("[MobileGlues] Setting: enableExtComputeShader      = %s",
           global_settings.ext_compute_shader ? "true" : "false")
-    LOG_V("[MobileGlues] Setting: enableExtGL43               = %s", global_settings.ext_gl43 ? "true" : "false")
     LOG_V("[MobileGlues] Setting: enableExtTimerQuery         = %s", global_settings.ext_timer_query ? "true" : "false")
     LOG_V("[MobileGlues] Setting: enableExtDirectStateAccess  = %s",
           global_settings.ext_direct_state_access ? "true" : "false")
@@ -350,7 +345,6 @@ std::string dump_settings_string(std::string prefix) {
     }
     ss << "\n";
 
-    ss << prefix << "ExtGL43: " << (global_settings.ext_gl43 ? "True" : "False") << "\n";
     ss << prefix << "ExtComputeShader: " << (global_settings.ext_compute_shader ? "True" : "False") << "\n";
     ss << prefix << "ExtTimerQuery: " << (global_settings.ext_timer_query ? "True" : "False") << "\n";
     ss << prefix << "ExtDirectStateAccess: " << (global_settings.ext_direct_state_access ? "True" : "False") << "\n";
@@ -415,8 +409,10 @@ std::string dump_settings_string(std::string prefix) {
     }
     ss << "\n";
 
-    ss << prefix << "HideMGEnvLevel: " << ((global_settings.hide_mg_env_level == HideMGEnvLevel::Disabled)
-        ? "Disabled" : std::to_string(static_cast<int>(global_settings.hide_mg_env_level)));
+    ss << prefix << "HideMGEnvLevel: "
+       << ((global_settings.hide_mg_env_level == HideMGEnvLevel::Disabled)
+               ? "Disabled"
+               : std::to_string(static_cast<int>(global_settings.hide_mg_env_level)));
 
     ss << "\n";
 

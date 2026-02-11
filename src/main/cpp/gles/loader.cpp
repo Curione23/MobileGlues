@@ -192,10 +192,6 @@ void InitGLESCapabilities() {
         AppendExtension("GL_EXT_timer_query");
     }
 
-    if (global_settings.ext_gl43) {
-        AppendExtension("OpenGL43");
-    }
-
     if (global_settings.ext_compute_shader) {
         AppendExtension("GL_ARB_compute_shader");
     }
@@ -207,7 +203,6 @@ void InitGLESCapabilities() {
 
     int glVersion = GLVersion.toInt(2);
     for (int ver = 32; ver <= glVersion; ++ver) {
-        if (global_settings.ext_gl43 && ver == 43) continue;
         if (ver > 33 && ver < 40) continue;
         LOG_D("Appending OpenGL extension for version %d", ver)
         AppendExtension(("OpenGL" + std::to_string(ver)).c_str());
