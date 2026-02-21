@@ -3,23 +3,36 @@ plugins {
 }
 
 android {
-    namespace = "top.mobilegl.mobileglues"
-    compileSdk = 36
+    namespace 'top.mobilegl.mobileglues'
+    compileSdk 36
 
     defaultConfig {
-        minSdk = 21
-        consumerProguardFiles "consumer-rules.pro"
+        minSdk 21
+        // No flavors here!
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            minifyEnabled false
         }
         debug {
-            debuggable true
+            // Standard debug
         }
-        all {
-            matchingFallbacks = ['release', 'debug']
+        // This ensures the app's 'proguard' build type can find this library
+        proguard {
+            initWith debug
+        }
+    }
+
+    publishing {
+        singleVariant("release")
+        singleVariant("debug")
+    }
+
+    externalNativeBuild {
+        // Only keep this if you actually have the C++ files in this folder
+        ndkBuild {
+            path file("src/main/jni/Android.mk")
         }
     }
 }
