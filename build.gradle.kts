@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    id 'com.android.library'
 }
 
 android {
@@ -8,31 +8,18 @@ android {
 
     defaultConfig {
         minSdk = 21
-
-        ndkVersion = "27.3.13750724"
+        consumerProguardFiles "consumer-rules.pro"
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
         }
-        create("proguard") {
-            isMinifyEnabled = true
-            initWith(getByName("debug"))
+        debug {
+            debuggable true
         }
-        create("fordebug") {
+        all {
+            matchingFallbacks = ['release', 'debug']
         }
-    }
-
-    externalNativeBuild {
-        cmake {
-            path = file("MobileGlues-cpp/CMakeLists.txt")
-            version = "3.22.1"
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
